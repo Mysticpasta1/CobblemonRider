@@ -16,7 +16,7 @@ import static dev.zanckor.cobblemonridingfabric.CobblemonRidingFabric.MODID;
 
 public class StaminaBar implements HudRenderCallback {
     private static final Identifier BAR = new Identifier(MODID, "textures/gui/stamina.png");
-    private static final float BAR_WIDTH = 5, BAR_HEIGHT = 81;
+    private static final float BAR_WIDTH = 182, BAR_HEIGHT = 10;
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
@@ -32,18 +32,19 @@ public class StaminaBar implements HudRenderCallback {
             float maxStamina = ((IPokemonStamina) pokemon).getMaxStamina();
             float percentage = (maxStamina - stamina) / maxStamina;
 
-            int xPos = (int) ((width / 2) + 100);
-            int yPos = (int) (height - BAR_HEIGHT);
+            int xPos = (int) ((width / 2) - (BAR_WIDTH / 2));
+            int yPos = (int) (height - 29);
 
             poseStack.push();
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderTexture(0, BAR);
 
             drawContext.drawTexture(BAR, xPos, yPos,
-                    BAR_WIDTH, 0, (int) BAR_WIDTH, (int) BAR_HEIGHT, (int) BAR_WIDTH * 2, (int) BAR_HEIGHT);
+                    0, BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT);
 
             drawContext.drawTexture(BAR, xPos, yPos,
-                    0, 0, (int) BAR_WIDTH, (int) (BAR_HEIGHT * percentage), (int) BAR_WIDTH * 2, (int) BAR_HEIGHT);
+                    0, BAR_HEIGHT, (int) (BAR_WIDTH * percentage), (int) BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT);
+
             poseStack.pop();
         }
     }
