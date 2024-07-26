@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static dev.zanckor.cobblemonridingfabric.config.PokemonJsonObject.MountType.*;
 import static net.minecraft.advancement.criterion.ConstructBeaconCriterion.Conditions.level;
@@ -291,9 +292,11 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
 
         // On player interaction, if the player is not already riding the entity, add the player as a passenger
         if (!player.getMainHandStack().getItem().getTranslationKey().equals(megacuff) && getPassengerObject() != null) {
-            player.startRiding(this, true);
-            this.setStepHeight(2.5F);
-            resetKeyData(player);
+            if (Objects.equals(getPokemon().getOwnerPlayer(), player) || getControllingPassenger() != null) {
+                player.startRiding(this, true);
+                this.setStepHeight(2.5F);
+                resetKeyData(player);
+            }
         }
     }
 
