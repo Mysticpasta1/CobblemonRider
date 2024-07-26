@@ -25,7 +25,7 @@ public abstract class PokemonServerDelegateMixin {
 
         boolean isMoving = getEntity().getControllingPassenger() != null ?
                 getEntity().getControllingPassenger().getDeltaMovement().lengthSqr() > minimumSpeed :
-                getEntity().getDeltaMovement().lengthSqr() > minimumSpeed;
+                getEntity().getVelocity().lengthSqr() > minimumSpeed;
 
         getEntity().getEntityData().set(PokemonEntity.Companion.getMOVING(), isMoving);
     }
