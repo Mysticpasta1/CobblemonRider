@@ -6,7 +6,6 @@ import dev.zanckor.cobblemonridingfabric.mixininterface.IPokemonStamina;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,8 +27,8 @@ public class StaminaBar implements HudRenderCallback {
             float width = MinecraftClient.getInstance().getWindow().getScaledWidth();
             float height = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-            float stamina = ((IPokemonStamina) pokemon).getStamina();
-            float maxStamina = ((IPokemonStamina) pokemon).getMaxStamina();
+            float stamina = ((IPokemonStamina) pokemon).cobblemonRider$getStamina();
+            float maxStamina = ((IPokemonStamina) pokemon).cobblemonRider$getMaxStamina();
             float percentage = (maxStamina - stamina) / maxStamina;
 
             int xPos = (int) ((width / 2) - (BAR_WIDTH / 2));
