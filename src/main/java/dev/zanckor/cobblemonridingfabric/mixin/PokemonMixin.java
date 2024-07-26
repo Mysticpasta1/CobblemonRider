@@ -13,6 +13,7 @@ import dev.zanckor.cobblemonridingfabric.config.PokemonJsonObject;
 import dev.zanckor.cobblemonridingfabric.mixininterface.IEntityData;
 import dev.zanckor.cobblemonridingfabric.mixininterface.IPokemonStamina;
 import kotlin.jvm.internal.DefaultConstructorMarker;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Monster;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.zanckor.cobblemonridingfabric.config.PokemonJsonObject.MountType.*;
+import static net.minecraft.advancement.criterion.ConstructBeaconCriterion.Conditions.level;
 
 @Mixin(PokemonEntity.class)
 public abstract class PokemonMixin extends PathAwareEntity implements Poseable, Schedulable, IPokemonStamina {
@@ -152,26 +154,28 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
             movementInput = getControllingPassenger().getVelocity()
                     .multiply(speedMultiplier)
                     .add(prevMovementInput)
-                    .multiply(0.9)
+                    .multiply(0.86)
                     .multiply(1, isNonGravityMount ? 0 : 1, 1);
 
-            timeUntilNextJump++;
-            move(MovementType.SELF, movementInput.multiply(speedConfigModifier, 1, speedConfigModifier));
-            setVelocity(movementInput.multiply(speedConfigModifier, 1, speedConfigModifier));
+            move(MovementType.SELF, movementInput);
+            setVelocity(movementInput);
+            jumpHandler();
 
-            if (isSpacePressed() && getDistanceToSurface(this) > -1.5 && timeUntilNextJump > 10) {
-                jump();
+            prevMovementInput = getVelocity();
 
-                timeUntilNextJump = 0;
-            }
-
-            prevMovementInput = movementInput;
+            move(MovementType.SELF, getVelocity().multiply(speedConfigModifier, 1, speedConfigModifier));
+            setVelocity(getVelocity().multiply(speedConfigModifier, 1, speedConfigModifier));
         }
     }
 
-    @Override
-    public boolean isOnGround() {
-        return ((int) Math.abs(getDistanceToSurface(this))) == 0;
+    private void jumpHandler() {
+        timeUntilNextJump++;
+
+        if (isSpacePressed() && isOnGround() && timeUntilNextJump > 20) {
+            jump();
+
+            timeUntilNextJump = 0;
+        }
     }
 
     private void rotateBody() {
@@ -214,7 +218,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
 
     private void swimmingHandler() {
         if (getControllingPassenger() != null && isTouchingWater()) {
-            double waterEmergeSpeed = isSpacePressed() ? 0.5 : isShiftPressed() ? -0.25 : 0.00309;
+            double waterEmergeSpeed = isSpacePressed() ? 0.5 : isShiftPressed() ? -0.25 : 0.00300;
 
             setVelocity(getVelocity().x, waterEmergeSpeed, getVelocity().z);
 
@@ -246,7 +250,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
         setVelocity(getVelocity().x, altitudeIncreaseValue, getVelocity().z);
 
         if (getPokemon().getEntity() != null) {
-            getPokemon().getEntity().setBehaviourFlag(PokemonBehaviourFlag.FLYING, !isOnGround());
+            getPokemon().getEntity().setBehaviourFlag(PokemonBehaviourFlag.FLYING, getWorld().getBlockState(getBlockPos().down()).isAir());
         }
     }
 
