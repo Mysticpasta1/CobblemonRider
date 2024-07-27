@@ -104,7 +104,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
     @Inject(method = "recallWithAnimation", at = @At("HEAD"), remap = false)
     public void recall(CallbackInfoReturnable<CompletableFuture<Pokemon>> cir) {
         if (getControllingPassenger() != null) {
-            removePassenger(getControllingPassenger());
+            getControllingPassenger().stopRiding();
         }
     }
 
