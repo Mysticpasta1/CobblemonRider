@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PokemonServerDelegateMixin {
     private Vec3d prevPos;
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract PokemonEntity getEntity();
 
 
