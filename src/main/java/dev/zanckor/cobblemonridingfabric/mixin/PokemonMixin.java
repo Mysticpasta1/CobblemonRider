@@ -260,7 +260,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
     @Unique
     private void lavaSwimmingHandler() {
         if (getControllingPassenger() != null && isInLava()) {
-            double lavaEmergeSpeed = isSpacePressed() ? 0 : 0.203;
+            double lavaEmergeSpeed = isSprinting ? 0.4 : 0.3;
 
             setVelocity(getVelocity().x, lavaEmergeSpeed, getVelocity().z);
         }
