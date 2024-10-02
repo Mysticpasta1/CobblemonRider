@@ -301,7 +301,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
 
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
     public void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (getControllingPassenger() != null) {
+        if (getControllingPassenger() != null && fallDistance > 4) {
             cir.setReturnValue(false);
         }
     }
@@ -320,7 +320,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
         // On player interaction, if the player is not already riding the entity, add the player as a passenger
         if (!player.getMainHandStack().getItem().getTranslationKey().equals(megacuff) && getPassengerObject() != null) {
             if (Objects.equals(getPokemon().getOwnerPlayer(), player) || getControllingPassenger() != null) {
-                player.startRiding(this, true);
+                player.startRiding(this);
                 this.setStepHeight(2.5F);
                 resetKeyData(player);
             }
