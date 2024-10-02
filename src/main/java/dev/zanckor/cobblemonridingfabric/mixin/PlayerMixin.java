@@ -44,7 +44,7 @@ public abstract class PlayerMixin extends Entity {
         }
     }
 
-    @Inject(method = "damage", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void hurt(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
         Entity vehicle = this.getVehicle();
 
